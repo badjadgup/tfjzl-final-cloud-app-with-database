@@ -1,0 +1,20 @@
+{% extends 'onlinecourse/base.html' %}
+{% block title %}Exam results — {{ course.name }}{% endblock %}
+{% block content %}
+<h1>Exam results</h1><h2 class="h4">{{ course.name }}</h2>
+<div class="alert {% if submission.passed %}alert-success{% else %}alert-warning{% endif %}">
+  {% if submission.passed %}<h3 class="h4">Congratulations! You passed the exam.</h3>
+  {% else %}<h3 class="h4">Keep learning! You can try again.</h3>{% endif %}
+  <p class="mb-0">Score: {{ submission.score }}/{{ submission.max_score }} — {{ submission.percentage }}% (pass mark: 80%)</p>
+</div>
+{% for result in results %}
+  <article class="card mb-3"><div class="card-body">
+    <h3 class="h5">{{ forloop.counter }}. {{ result.question.question_text }}</h3>
+    <p><strong>{% if result.correct %}Correct{% else %}Incorrect{% endif %}</strong></p>
+    <ul>{% for choice in result.choices %}
+      <li>{{ choice.text }}{% if choice.selected %} — Your selection{% endif %}{% if choice.correct %} — Correct answer{% endif %}</li>
+    {% endfor %}</ul>
+  </div></article>
+{% endfor %}
+<a class="btn btn-primary" href="{% url 'onlinecourse:course_details' course.id %}">Return to course / Retake exam</a>
+{% endblock %}

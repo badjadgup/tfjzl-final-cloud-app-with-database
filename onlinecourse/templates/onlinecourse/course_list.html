@@ -1,0 +1,10 @@
+{% extends 'onlinecourse/base.html' %}
+{% block content %}
+<h1 class="mb-4">Available courses</h1>
+{% for course in courses %}
+  <article class="card mb-3"><div class="card-body">
+    <h2 class="h4">{{ course.name }}</h2><p>{{ course.description }}</p>
+    <a class="btn btn-primary" href="{% url 'onlinecourse:course_details' course.id %}">View course</a>
+  </div></article>
+{% empty %}<p>No courses yet. Run the seed_demo command or add a course in the admin site.</p>{% endfor %}
+{% endblock %}
