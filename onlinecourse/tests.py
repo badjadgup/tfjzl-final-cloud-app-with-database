@@ -54,3 +54,12 @@ class ExamTests(TestCase):
         self.client.logout()
         self.assertEqual(self.client.post(self.submit_url).status_code, 302)
         self.assertFalse(Submission.objects.exists())
+
+    def test_result_context_uses_all_question_weights(self):
+        Question.objects.create(course=self.course, question_text='Unanswered', grade=2)
+        response = self.client.post(self.submit_url, {f'question_{self.question.pk}': [self.a.pk, self.b.pk]}, follow=True)
+        self.assertEqual(response.context['total_score'], 3)
+        self.assertEqual(response.context['possible_score'], 5)
+        self.assertEqual(response.context['grade'], 60)
+        self.assertEqual(response.context['possible'], 5)
+        self.assertFalse(response.context['passed'])
